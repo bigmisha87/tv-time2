@@ -5,7 +5,7 @@ import { getStore, lastActivity } from "@/lib/store";
 import { recommendationsFor, upcomingPremieres } from "@/lib/tmdb";
 
 export default async function SearchPage() {
-  const store = getStore();
+  const store = await getStore();
   const shows = store?.shows ?? [];
   const followedIds = shows.filter((s) => s.followed).map((s) => s.tmdbId);
   const excludeIds = new Set(shows.map((s) => s.tmdbId));

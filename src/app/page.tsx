@@ -11,8 +11,8 @@ import {
 } from "@/lib/store";
 import PosterPlaceholder from "@/components/PosterPlaceholder";
 
-export default function UpNextPage() {
-  const withNext = getFollowedShows()
+export default async function UpNextPage() {
+  const withNext = (await getFollowedShows())
     .map((show) => ({ show, next: nextUnwatched(show) }))
     .filter((x) => x.next !== null)
     .sort(

@@ -1,5 +1,4 @@
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
+import { supabase } from "./supabase";
 
 export interface StoredEpisode {
   season: number;
@@ -15,6 +14,9 @@ export interface StoredEpisode {
   watchedDate: string | null;
 }
 
+/** A user's personal list membership for a show ("watchlist", "dropped", …). */
+export type ShowList = "watchlist" | "dropped";
+
 export interface StoredShow {
   tmdbId: number;
   tvdbId: number | null;
@@ -27,6 +29,10 @@ export interface StoredShow {
   imdbVotes?: string | null;
   followed: boolean;
   favorited: boolean;
+  /** User's own 1–5 star rating of the show (null = unrated). */
+  rating?: number | null;
+  /** Personal lists this show belongs to. */
+  lists?: ShowList[];
   addedAt?: string;
   episodes: StoredEpisode[];
 }
@@ -36,15 +42,32 @@ export interface Store {
   shows: StoredShow[];
 }
 
-const storePath = join(process.cwd(), "data", "store.json");
-
-export function getStore(): Store | null {
-  if (!existsSync(storePath)) return null;
-  return JSON.parse(readFileSync(storePath, "utf8")) as Store;
+/**
+ * Every show is one row: { tmdb_id, data } where data is the full StoredShow.
+ * Storing the whole object as one document means new fields (ratings, lists)
+ * never require a database structure change.
+ */
+export async function getAllShows(): Promise<StoredShow[]> {
+  const { data, error } = await supabase.from("shows").select("data");
+  if (error) {
+    console.error("Supabase getAllShows failed:", error.message);
+    return [];
+  }
+  return (data ?? []).map((row) => row.data as StoredShow);
 }
 
-export function saveStore(store: Store): void {
-  writeFileSync(storePath, JSON.stringify(store, null, 1));
+export async function getStore(): Promise<Store | null> {
+  const shows = await getAllShows();
+  return { shows, syncedAt: today() };
+}
+
+/** Persist one show back to the cloud (full-document upsert). */
+export async function saveShow(show: StoredShow): Promise<void> {
+  const { error } = await supabase.from("shows").upsert(
+    { tmdb_id: show.tmdbId, data: show, updated_at: new Date().toISOString() },
+    { onConflict: "tmdb_id" }
+  );
+  if (error) throw new Error(`Supabase saveShow failed: ${error.message}`);
 }
 
 export function today(): string {
@@ -75,10 +98,9 @@ export function lastActivity(show: StoredShow): string {
   return max;
 }
 
-export function getFollowedShows(): StoredShow[] {
-  const store = getStore();
-  if (!store) return [];
-  return store.shows
+export async function getFollowedShows(): Promise<StoredShow[]> {
+  const shows = await getAllShows();
+  return shows
     .filter((s) => s.followed)
     .sort(
       (a, b) =>
@@ -154,8 +176,19 @@ export function totalWatchedMinutes(shows: StoredShow[]): number {
   return minutes;
 }
 
-export function getShowById(tmdbId: number): StoredShow | undefined {
-  return getStore()?.shows.find((s) => s.tmdbId === tmdbId);
+export async function getShowById(
+  tmdbId: number
+): Promise<StoredShow | undefined> {
+  const { data, error } = await supabase
+    .from("shows")
+    .select("data")
+    .eq("tmdb_id", tmdbId)
+    .maybeSingle();
+  if (error) {
+    console.error("Supabase getShowById failed:", error.message);
+    return undefined;
+  }
+  return (data?.data as StoredShow | undefined) ?? undefined;
 }
 
 export function posterUrl(

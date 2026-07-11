@@ -11,10 +11,10 @@ import {
   watchProgress,
 } from "@/lib/store";
 
-export default function ProfilePage() {
-  const store = getStore();
+export default async function ProfilePage() {
+  const store = await getStore();
   const shows = store?.shows ?? [];
-  const followed = getFollowedShows();
+  const followed = await getFollowedShows();
 
   const episodesWatched = shows.reduce(
     (n, s) => n + s.episodes.filter((e) => e.watched).length,

@@ -43,7 +43,7 @@ export default async function ShowDetailPage({
 }) {
   const { id } = await params;
   const tmdbId = Number(id);
-  const show = getShowById(tmdbId);
+  const show = await getShowById(tmdbId);
 
   // ----- Preview mode: a show that isn't in the library yet -----
   if (!show) {

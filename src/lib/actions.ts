@@ -1,7 +1,13 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { getStore, saveStore, today } from "./store";
+import {
+  getShowById,
+  saveShow,
+  today,
+  type ShowList,
+  type StoredShow,
+} from "./store";
 import { fetchFullShow } from "./tmdb";
 
 function refresh() {
@@ -14,16 +20,14 @@ export async function setEpisodeWatched(
   episode: number,
   watched: boolean
 ): Promise<void> {
-  const store = getStore();
-  if (!store) return;
-  const show = store.shows.find((s) => s.tmdbId === tmdbId);
+  const show = await getShowById(tmdbId);
   const ep = show?.episodes.find(
     (e) => e.season === season && e.episode === episode
   );
-  if (!ep) return;
+  if (!show || !ep) return;
   ep.watched = watched;
   ep.watchedDate = watched ? today() : null;
-  saveStore(store);
+  await saveShow(show);
   refresh();
 }
 
@@ -31,9 +35,7 @@ export async function markSeasonWatched(
   tmdbId: number,
   season: number
 ): Promise<void> {
-  const store = getStore();
-  if (!store) return;
-  const show = store.shows.find((s) => s.tmdbId === tmdbId);
+  const show = await getShowById(tmdbId);
   if (!show) return;
   const t = today();
   for (const ep of show.episodes) {
@@ -42,22 +44,21 @@ export async function markSeasonWatched(
       ep.watchedDate = t;
     }
   }
-  saveStore(store);
+  await saveShow(show);
   refresh();
 }
 
 export async function addShow(tmdbId: number): Promise<void> {
-  const store = getStore();
-  if (!store) return;
-  if (store.shows.some((s) => s.tmdbId === tmdbId)) {
-    const existing = store.shows.find((s) => s.tmdbId === tmdbId)!;
+  const existing = await getShowById(tmdbId);
+  if (existing) {
     existing.followed = true;
+    await saveShow(existing);
   } else {
     const show = await fetchFullShow(tmdbId);
     show.addedAt = today();
-    store.shows.push(show);
+    show.followed = true;
+    await saveShow(show);
   }
-  saveStore(store);
   refresh();
 }
 
@@ -65,12 +66,10 @@ export async function setFollowed(
   tmdbId: number,
   followed: boolean
 ): Promise<void> {
-  const store = getStore();
-  if (!store) return;
-  const show = store.shows.find((s) => s.tmdbId === tmdbId);
+  const show = await getShowById(tmdbId);
   if (!show) return;
   show.followed = followed;
-  saveStore(store);
+  await saveShow(show);
   refresh();
 }
 
@@ -78,11 +77,34 @@ export async function setFavorited(
   tmdbId: number,
   favorited: boolean
 ): Promise<void> {
-  const store = getStore();
-  if (!store) return;
-  const show = store.shows.find((s) => s.tmdbId === tmdbId);
+  const show = await getShowById(tmdbId);
   if (!show) return;
   show.favorited = favorited;
-  saveStore(store);
+  await saveShow(show);
+  refresh();
+}
+
+/** Set the user's personal 1–5 star rating (0 clears it). */
+export async function setRating(tmdbId: number, rating: number): Promise<void> {
+  const show = await getShowById(tmdbId);
+  if (!show) return;
+  show.rating = rating > 0 ? rating : null;
+  await saveShow(show);
+  refresh();
+}
+
+/** Toggle membership of a show in one of the personal lists. */
+export async function toggleList(
+  tmdbId: number,
+  list: ShowList,
+  inList: boolean
+): Promise<void> {
+  const show = await getShowById(tmdbId);
+  if (!show) return;
+  const current = new Set<ShowList>(show.lists ?? []);
+  if (inList) current.add(list);
+  else current.delete(list);
+  show.lists = [...current];
+  await saveShow(show);
   refresh();
 }

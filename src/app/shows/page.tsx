@@ -53,8 +53,8 @@ const SECTIONS: { bucket: ShowBucket; title: string }[] = [
   { bucket: "finished", title: "Finished" },
 ];
 
-export default function MyShowsPage() {
-  const shows = getFollowedShows();
+export default async function MyShowsPage() {
+  const shows = await getFollowedShows();
 
   return (
     <div>

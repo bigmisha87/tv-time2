@@ -37,11 +37,11 @@ function groupLabel(item: UpcomingItem): string {
   return "Later";
 }
 
-export default function UpcomingPage() {
+export default async function UpcomingPage() {
   const t = today();
   const items: UpcomingItem[] = [];
 
-  for (const show of getFollowedShows()) {
+  for (const show of await getFollowedShows()) {
     for (const ep of show.episodes) {
       if (!ep.airDate) continue;
       const daysAway = dayDiff(t, ep.airDate);
