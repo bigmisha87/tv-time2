@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import PosterPlaceholder from "@/components/PosterPlaceholder";
 import SeasonList from "@/components/SeasonList";
 import TrailerPlayer from "@/components/TrailerPlayer";
+import StarRating from "@/components/StarRating";
+import ListButtons from "@/components/ListButtons";
 import { addShow, setFavorited, setFollowed } from "@/lib/actions";
 import {
   averageRuntime,
@@ -148,6 +150,9 @@ export default async function ShowDetailPage({
           {show.tmdbStatus && (
             <p className="mt-1 text-sm text-muted">{show.tmdbStatus}</p>
           )}
+          <div className="mt-3">
+            <StarRating tmdbId={show.tmdbId} initial={show.rating ?? 0} />
+          </div>
           <div className="mt-3 flex flex-wrap gap-2">
             <form action={setFavorited.bind(null, show.tmdbId, !show.favorited)}>
               <button
@@ -183,6 +188,7 @@ export default async function ShowDetailPage({
                 IMDb ↗
               </a>
             )}
+            <ListButtons tmdbId={show.tmdbId} initial={show.lists ?? []} />
           </div>
         </div>
       </div>

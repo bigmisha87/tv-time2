@@ -18,10 +18,13 @@ export default async function SearchPage() {
   const seeds = shows
     .map((s) => {
       const watched = s.episodes.filter((e) => e.watched).length;
+      // A 5★ show pulls ~2× harder than an unrated one; a 1★ show ~0.8×.
+      const ratingBoost = s.rating ? 0.5 + s.rating * 0.3 : 1;
       const weight =
         watched *
         (s.favorited ? 2 : 1) *
-        (lastActivity(s) >= yearAgo ? 1.5 : 1);
+        (lastActivity(s) >= yearAgo ? 1.5 : 1) *
+        ratingBoost;
       return { id: s.tmdbId, weight };
     })
     .filter((x) => x.weight > 0)
