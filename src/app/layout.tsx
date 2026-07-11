@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import AppNav from "@/components/AppNav";
-import { getAllShows, newEpisodeCount } from "@/lib/store";
+import { getAllShows, newEpisodeAirDates } from "@/lib/store";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,7 +38,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const newCount = newEpisodeCount(await getAllShows());
+  const newEpisodeDates = newEpisodeAirDates(await getAllShows());
 
   return (
     <html
@@ -57,7 +57,7 @@ export default async function RootLayout({
         />
       </head>
       <body className="min-h-full">
-        <AppNav newCount={newCount} />
+        <AppNav newEpisodeDates={newEpisodeDates} />
         <main className="mx-auto max-w-5xl px-4 pb-24 pt-4 md:pb-10 md:pt-6">
           {children}
         </main>

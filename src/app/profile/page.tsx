@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
+import Link from "next/link";
 import ShowCard from "@/components/ShowCard";
-import ThemeToggle from "@/components/ThemeToggle";
 import {
   airedUnwatchedCount,
   classifyShow,
@@ -83,13 +83,16 @@ export default async function ProfilePage() {
         ))}
       </div>
 
-      <section className="mt-8 flex items-center justify-between rounded-xl border border-border-app bg-surface p-4">
+      <Link
+        href="/settings"
+        className="mt-8 flex items-center justify-between rounded-xl border border-border-app bg-surface p-4 transition-colors hover:border-accent"
+      >
         <div>
-          <p className="text-sm font-medium">Appearance</p>
-          <p className="text-xs text-muted">Choose light or dark mode</p>
+          <p className="text-sm font-medium">⚙ Settings</p>
+          <p className="text-xs text-muted">Theme, new-episode alerts</p>
         </div>
-        <ThemeToggle />
-      </section>
+        <span className="text-muted">→</span>
+      </Link>
 
       {favorites.length > 0 && (
         <section className="mt-8">

@@ -33,6 +33,9 @@ export interface StoredShow {
   rating?: number | null;
   /** Personal lists this show belongs to. */
   lists?: ShowList[];
+  /** When true, don't count this show's new episodes in alerts
+   *  (the user prefers to wait for the whole season). */
+  seasonWait?: boolean;
   addedAt?: string;
   episodes: StoredEpisode[];
 }
@@ -83,21 +86,25 @@ export function airedUnwatchedCount(show: StoredShow): number {
   return show.episodes.filter((e) => hasAired(e, t) && !e.watched).length;
 }
 
-/** Unwatched episodes of followed shows that aired within the last `days`. */
-export function newEpisodeCount(shows: StoredShow[], days = 7): number {
+/**
+ * Air dates of unwatched episodes from followed shows that aired within the
+ * last `days`. Shows flagged seasonWait are skipped. The client turns these
+ * into a badge count, filtering out dates already marked "seen".
+ */
+export function newEpisodeAirDates(shows: StoredShow[], days = 7): string[] {
   const t = today();
   const cutoff = new Date(Date.now() - days * 86_400_000)
     .toISOString()
     .slice(0, 10);
-  let count = 0;
+  const dates: string[] = [];
   for (const show of shows) {
-    if (!show.followed) continue;
+    if (!show.followed || show.seasonWait) continue;
     for (const e of show.episodes) {
       if (e.airDate && e.airDate <= t && e.airDate >= cutoff && !e.watched)
-        count++;
+        dates.push(e.airDate);
     }
   }
-  return count;
+  return dates;
 }
 
 /** The next aired-but-unwatched episode, or null when fully caught up. */

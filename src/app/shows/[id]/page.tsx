@@ -7,7 +7,12 @@ import SeasonList from "@/components/SeasonList";
 import TrailerPlayer from "@/components/TrailerPlayer";
 import StarRating from "@/components/StarRating";
 import ListButtons from "@/components/ListButtons";
-import { addShow, setFavorited, setFollowed } from "@/lib/actions";
+import {
+  addShow,
+  setFavorited,
+  setFollowed,
+  setSeasonWait,
+} from "@/lib/actions";
 import {
   averageRuntime,
   getShowById,
@@ -189,6 +194,22 @@ export default async function ShowDetailPage({
               </a>
             )}
             <ListButtons tmdbId={show.tmdbId} initial={show.lists ?? []} />
+            <form
+              action={setSeasonWait.bind(null, show.tmdbId, !show.seasonWait)}
+            >
+              <button
+                type="submit"
+                className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
+                  show.seasonWait
+                    ? "border-accent text-accent"
+                    : "border-border-app text-muted hover:text-foreground"
+                }`}
+              >
+                {show.seasonWait
+                  ? "⏸ Waiting for season"
+                  : "Wait for full season"}
+              </button>
+            </form>
           </div>
         </div>
       </div>
