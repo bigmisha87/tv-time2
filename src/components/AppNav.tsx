@@ -65,7 +65,7 @@ function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
 }
 
-export default function AppNav() {
+export default function AppNav({ newCount = 0 }: { newCount?: number }) {
   const pathname = usePathname();
 
   return (
@@ -81,13 +81,18 @@ export default function AppNav() {
               <Link
                 key={tab.href}
                 href={tab.href}
-                className={`text-sm font-medium transition-colors ${
+                className={`relative text-sm font-medium transition-colors ${
                   isActive(pathname, tab.href)
                     ? "text-accent"
                     : "text-muted hover:text-foreground"
                 }`}
               >
                 {tab.label}
+                {tab.href === "/calendar" && newCount > 0 && (
+                  <span className="ml-1.5 inline-flex min-w-[1.1rem] items-center justify-center rounded-full bg-badge px-1 text-[11px] font-bold text-white">
+                    {newCount}
+                  </span>
+                )}
               </Link>
             ))}
           </nav>
@@ -103,19 +108,26 @@ export default function AppNav() {
               <Link
                 key={tab.href}
                 href={tab.href}
-                className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] font-medium ${
+                className={`relative flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] font-medium ${
                   active ? "text-accent" : "text-muted"
                 }`}
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={active ? 2 : 1.5}
-                  className="h-6 w-6"
-                >
-                  {tab.icon}
-                </svg>
+                <span className="relative">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={active ? 2 : 1.5}
+                    className="h-6 w-6"
+                  >
+                    {tab.icon}
+                  </svg>
+                  {tab.href === "/calendar" && newCount > 0 && (
+                    <span className="absolute -right-2 -top-1 inline-flex min-w-[1.05rem] items-center justify-center rounded-full bg-badge px-1 text-[10px] font-bold text-white">
+                      {newCount}
+                    </span>
+                  )}
+                </span>
                 {tab.label}
               </Link>
             );

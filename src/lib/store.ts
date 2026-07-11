@@ -83,6 +83,23 @@ export function airedUnwatchedCount(show: StoredShow): number {
   return show.episodes.filter((e) => hasAired(e, t) && !e.watched).length;
 }
 
+/** Unwatched episodes of followed shows that aired within the last `days`. */
+export function newEpisodeCount(shows: StoredShow[], days = 7): number {
+  const t = today();
+  const cutoff = new Date(Date.now() - days * 86_400_000)
+    .toISOString()
+    .slice(0, 10);
+  let count = 0;
+  for (const show of shows) {
+    if (!show.followed) continue;
+    for (const e of show.episodes) {
+      if (e.airDate && e.airDate <= t && e.airDate >= cutoff && !e.watched)
+        count++;
+    }
+  }
+  return count;
+}
+
 /** The next aired-but-unwatched episode, or null when fully caught up. */
 export function nextUnwatched(show: StoredShow): StoredEpisode | null {
   const t = today();
