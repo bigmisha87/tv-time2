@@ -58,7 +58,7 @@ export default async function RootLayout({
       </head>
       <body className="min-h-full">
         <AppNav newEpisodeDates={newEpisodeDates} />
-        <main className="mx-auto max-w-5xl px-4 pb-24 pt-4 md:pb-10 md:pt-6">
+        <main className="mx-auto max-w-5xl px-4 pb-24 pt-[calc(env(safe-area-inset-top)_+_1rem)] md:pb-10 md:pt-6">
           {children}
         </main>
       </body>
