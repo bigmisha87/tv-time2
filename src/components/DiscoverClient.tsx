@@ -3,8 +3,15 @@
 import Link from "next/link";
 import { useState, useTransition } from "react";
 import { addShow } from "@/lib/actions";
-import type { TmdbSearchResult } from "@/lib/tmdb";
+import type { TmdbSearchResult, TvGenre } from "@/lib/tmdb";
 import PosterPlaceholder from "./PosterPlaceholder";
+
+export interface DiscoverSection {
+  title: string;
+  subtitle?: string;
+  premiere?: boolean;
+  items: TmdbSearchResult[];
+}
 
 function premiereLabel(date: string | null | undefined): string | null {
   if (!date) return null;
@@ -16,23 +23,27 @@ function premiereLabel(date: string | null | undefined): string | null {
     (new Date(date + "T00:00:00Z").getTime() - Date.now()) / 86_400_000
   );
   if (days <= 0) return formatted;
-  return `${formatted} · in ${days} day${days === 1 ? "" : "s"}`;
+  return `${formatted} · in ${days}d`;
 }
 
-export default function SearchClient({
+export default function DiscoverClient({
   existingIds,
-  upcoming,
-  recommended,
+  sections,
+  genres,
 }: {
   existingIds: number[];
-  upcoming: TmdbSearchResult[];
-  recommended: TmdbSearchResult[];
+  sections: DiscoverSection[];
+  genres: TvGenre[];
 }) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<TmdbSearchResult[] | null>(null);
   const [searching, setSearching] = useState(false);
   const [added, setAdded] = useState<Set<number>>(new Set(existingIds));
   const [, startTransition] = useTransition();
+
+  const [activeGenre, setActiveGenre] = useState<number | null>(null);
+  const [genreItems, setGenreItems] = useState<TmdbSearchResult[]>([]);
+  const [genreLoading, setGenreLoading] = useState(false);
 
   async function runSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -47,6 +58,23 @@ export default function SearchClient({
     }
   }
 
+  async function selectGenre(g: TvGenre) {
+    if (activeGenre === g.id) {
+      setActiveGenre(null);
+      setGenreItems([]);
+      return;
+    }
+    setActiveGenre(g.id);
+    setGenreLoading(true);
+    try {
+      const res = await fetch(`/api/genre?id=${g.id}`);
+      const data = await res.json();
+      setGenreItems(data.results ?? []);
+    } finally {
+      setGenreLoading(false);
+    }
+  }
+
   function handleAdd(e: React.MouseEvent, tmdbId: number) {
     e.preventDefault();
     e.stopPropagation();
@@ -57,16 +85,20 @@ export default function SearchClient({
   function Card({
     r,
     showPremiere,
+    width,
   }: {
     r: TmdbSearchResult;
     showPremiere?: boolean;
+    width?: boolean;
   }) {
     const isAdded = added.has(r.tmdbId);
     const premiere = showPremiere ? premiereLabel(r.firstAirDate) : null;
     return (
       <Link
         href={`/shows/${r.tmdbId}`}
-        className="group block transition-transform active:scale-95 md:hover:scale-105"
+        className={`group block transition-transform active:scale-95 md:hover:scale-105 ${
+          width ? "w-28 shrink-0 sm:w-32" : ""
+        }`}
       >
         <div className="relative overflow-hidden rounded-lg bg-surface shadow-md">
           <div className="aspect-[2/3] w-full">
@@ -108,17 +140,11 @@ export default function SearchClient({
     );
   }
 
-  function Grid({
-    items,
-    showPremiere,
-  }: {
-    items: TmdbSearchResult[];
-    showPremiere?: boolean;
-  }) {
+  function Grid({ items }: { items: TmdbSearchResult[] }) {
     return (
       <div className="grid grid-cols-3 gap-x-3 gap-y-4 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
         {items.map((r) => (
-          <Card key={r.tmdbId} r={r} showPremiere={showPremiere} />
+          <Card key={r.tmdbId} r={r} />
         ))}
       </div>
     );
@@ -128,6 +154,8 @@ export default function SearchClient({
 
   return (
     <div>
+      <h1 className="mb-4 text-2xl font-bold">Discover</h1>
+
       <form onSubmit={runSearch} className="flex gap-2">
         <input
           type="search"
@@ -162,24 +190,69 @@ export default function SearchClient({
 
       {showDefault && (
         <div className="mt-6 space-y-8">
-          {upcoming.length > 0 && (
+          {/* Browse by genre */}
+          {genres.length > 0 && (
             <section>
               <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-accent">
-                Coming soon
+                Browse by genre
               </h2>
-              <Grid items={upcoming} showPremiere />
+              <div className="flex flex-wrap gap-2">
+                {genres.map((g) => (
+                  <button
+                    key={g.id}
+                    type="button"
+                    onClick={() => selectGenre(g)}
+                    className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
+                      activeGenre === g.id
+                        ? "border-accent bg-accent text-black"
+                        : "border-border-app text-muted hover:text-foreground"
+                    }`}
+                  >
+                    {g.name}
+                  </button>
+                ))}
+              </div>
+              {activeGenre !== null && (
+                <div className="mt-4">
+                  {genreLoading ? (
+                    <p className="text-sm text-muted">Loading…</p>
+                  ) : genreItems.length > 0 ? (
+                    <Grid items={genreItems} />
+                  ) : (
+                    <p className="text-sm text-muted">Nothing found.</p>
+                  )}
+                </div>
+              )}
             </section>
           )}
-          {recommended.length > 0 && (
-            <section>
-              <h2 className="mb-1 text-sm font-semibold uppercase tracking-wide text-accent">
-                Recommended for you
-              </h2>
-              <p className="mb-3 text-xs text-muted">
-                Based on the shows you watched most
-              </p>
-              <Grid items={recommended} />
-            </section>
+
+          {/* Discovery rows */}
+          {sections.map(
+            (section) =>
+              section.items.length > 0 && (
+                <section key={section.title}>
+                  <h2 className="text-sm font-semibold uppercase tracking-wide text-accent">
+                    {section.title}
+                  </h2>
+                  {section.subtitle && (
+                    <p className="mb-3 text-xs text-muted">{section.subtitle}</p>
+                  )}
+                  <div
+                    className={`flex gap-3 overflow-x-auto pb-2 ${
+                      section.subtitle ? "" : "mt-3"
+                    }`}
+                  >
+                    {section.items.map((r) => (
+                      <Card
+                        key={r.tmdbId}
+                        r={r}
+                        width
+                        showPremiere={section.premiere}
+                      />
+                    ))}
+                  </div>
+                </section>
+              )
           )}
         </div>
       )}

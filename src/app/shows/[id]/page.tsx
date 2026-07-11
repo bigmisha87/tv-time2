@@ -55,10 +55,10 @@ export default async function ShowDetailPage({
     return (
       <div>
         <Link
-          href="/search"
+          href="/discover"
           className="text-sm text-muted hover:text-foreground"
         >
-          &larr; Search
+          &larr; Discover
         </Link>
 
         <div className="mt-4 flex gap-5">

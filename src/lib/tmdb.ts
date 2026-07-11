@@ -75,6 +75,110 @@ export async function upcomingPremieres(): Promise<TmdbSearchResult[]> {
   }
 }
 
+/** Map a raw /discover or /trending list to English shows with posters. */
+function toResultList(
+  raw: RawListResult[],
+  limit = 18
+): TmdbSearchResult[] {
+  return raw
+    .filter((r) => r.poster_path)
+    .slice(0, limit)
+    .map(toResult);
+}
+
+/** Trending this week (cached for a day). */
+export async function trendingShows(): Promise<TmdbSearchResult[]> {
+  try {
+    const data = await api(
+      "/discover/tv",
+      {
+        sort_by: "popularity.desc",
+        with_original_language: "en",
+        "vote_count.gte": "50",
+        "air_date.gte": new Date(Date.now() - 120 * 86_400_000)
+          .toISOString()
+          .slice(0, 10),
+      },
+      DAY_SECONDS
+    );
+    return toResultList((data.results ?? []) as RawListResult[]);
+  } catch {
+    return [];
+  }
+}
+
+/** Highest-rated shows of all time with enough votes to be meaningful. */
+export async function topRatedShows(): Promise<TmdbSearchResult[]> {
+  try {
+    const data = await api(
+      "/discover/tv",
+      {
+        sort_by: "vote_average.desc",
+        with_original_language: "en",
+        "vote_count.gte": "1000",
+      },
+      DAY_SECONDS
+    );
+    return toResultList((data.results ?? []) as RawListResult[]);
+  } catch {
+    return [];
+  }
+}
+
+/** Critically acclaimed: strong ratings from a very large audience. */
+export async function acclaimedShows(): Promise<TmdbSearchResult[]> {
+  try {
+    const data = await api(
+      "/discover/tv",
+      {
+        sort_by: "vote_count.desc",
+        with_original_language: "en",
+        "vote_average.gte": "8",
+      },
+      DAY_SECONDS
+    );
+    return toResultList((data.results ?? []) as RawListResult[]);
+  } catch {
+    return [];
+  }
+}
+
+export interface TvGenre {
+  id: number;
+  name: string;
+}
+
+/** The list of TV genres (cached for a day). */
+export async function tvGenres(): Promise<TvGenre[]> {
+  try {
+    const data = await api("/genre/tv/list", {}, DAY_SECONDS);
+    return (data.genres ?? []) as TvGenre[];
+  } catch {
+    return [];
+  }
+}
+
+/** Popular shows within one genre (cached for a day). */
+export async function showsByGenre(
+  genreId: number
+): Promise<TmdbSearchResult[]> {
+  try {
+    const data = await api(
+      "/discover/tv",
+      {
+        with_genres: String(genreId),
+        sort_by: "popularity.desc",
+        with_original_language: "en",
+        "vote_count.gte": "100",
+      },
+      DAY_SECONDS
+    );
+    return toResultList((data.results ?? []) as RawListResult[], 20);
+  } catch {
+    return [];
+  }
+}
+
 interface RawVideo {
   key: string;
   site: string;

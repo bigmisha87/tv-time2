@@ -38,13 +38,13 @@ const TABS = [
     ),
   },
   {
-    href: "/search",
-    label: "Search",
+    href: "/discover",
+    label: "Discover",
     icon: (
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+        d="m9.813 9.813 4.374 4.374m-4.374-4.374L7.5 16.5l6.687-2.313m-4.374-4.374L16.5 7.5l-2.313 6.687M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
       />
     ),
   },
