@@ -1,0 +1,974 @@
+[
+  {
+    "tvdbId": 247808,
+    "name": "Suits",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 212,
+    "latestEpisodeId": 5277186,
+    "latestSeenDate": "2020-05-11 20:30:54"
+  },
+  {
+    "tvdbId": 73255,
+    "name": "House",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 176,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 74608,
+    "name": "Top Gear",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 172,
+    "latestEpisodeId": 5272607,
+    "latestSeenDate": "2015-08-08 14:01:09"
+  },
+  {
+    "tvdbId": 328634,
+    "name": "The Good Doctor",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 150,
+    "latestEpisodeId": 9677373,
+    "latestSeenDate": "2023-04-08 19:52:06"
+  },
+  {
+    "tvdbId": 73739,
+    "name": "Lost",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 120,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 153021,
+    "name": "The Walking Dead",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 104,
+    "latestEpisodeId": 6373631,
+    "latestSeenDate": "2025-01-04 19:56:21"
+  },
+  {
+    "tvdbId": 79349,
+    "name": "Dexter",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 96,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 357888,
+    "name": "Love, Death & Robots",
+    "followed": false,
+    "favorited": false,
+    "episodesSeen": 93,
+    "latestEpisodeId": 11073313,
+    "latestSeenDate": "2025-05-18 13:17:12"
+  },
+  {
+    "tvdbId": 75340,
+    "name": "Prison Break",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 81,
+    "latestEpisodeId": 772861,
+    "latestSeenDate": "2016-09-13 18:00:43"
+  },
+  {
+    "tvdbId": 275274,
+    "name": "Rick and Morty",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 81,
+    "latestEpisodeId": 9971637,
+    "latestSeenDate": "2023-10-19 18:01:00"
+  },
+  {
+    "tvdbId": 350665,
+    "name": "The Rookie",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 75,
+    "latestEpisodeId": 9084938,
+    "latestSeenDate": "2026-06-25 14:42:15"
+  },
+  {
+    "tvdbId": 121361,
+    "name": "Game of Thrones",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 74,
+    "latestEpisodeId": 7121405,
+    "latestSeenDate": "2020-03-23 16:14:51"
+  },
+  {
+    "tvdbId": 81189,
+    "name": "Breaking Bad",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 62,
+    "latestEpisodeId": 4553042,
+    "latestSeenDate": "2015-11-07 14:33:11"
+  },
+  {
+    "tvdbId": 277165,
+    "name": "Silicon Valley",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 53,
+    "latestEpisodeId": 7444636,
+    "latestSeenDate": "2020-04-07 19:51:23"
+  },
+  {
+    "tvdbId": 289590,
+    "name": "Mr. Robot",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 50,
+    "latestEpisodeId": 5670310,
+    "latestSeenDate": "2016-09-27 19:16:51"
+  },
+  {
+    "tvdbId": 336924,
+    "name": "You",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 50,
+    "latestEpisodeId": 10920390,
+    "latestSeenDate": "2025-05-29 10:21:36"
+  },
+  {
+    "tvdbId": 362829,
+    "name": "Mythic Quest",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 43,
+    "latestEpisodeId": 11091719,
+    "latestSeenDate": "2025-05-12 18:29:19"
+  },
+  {
+    "tvdbId": 355567,
+    "name": "The Boys",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 40,
+    "latestEpisodeId": 8931923,
+    "latestSeenDate": "2022-08-23 14:39:39"
+  },
+  {
+    "tvdbId": 79126,
+    "name": "The Wire",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 36,
+    "latestEpisodeId": 303064,
+    "latestSeenDate": "2026-06-25 14:41:56"
+  },
+  {
+    "tvdbId": 296762,
+    "name": "Westworld",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 36,
+    "latestEpisodeId": 9160494,
+    "latestSeenDate": "2024-10-11 16:11:37"
+  },
+  {
+    "tvdbId": 368207,
+    "name": "INVINCIBLE (2021)",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 36,
+    "latestEpisodeId": 11572735,
+    "latestSeenDate": "2026-04-26 07:43:55"
+  },
+  {
+    "tvdbId": 368316,
+    "name": "The Legend of Vox Machina",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 36,
+    "latestEpisodeId": 10657828,
+    "latestSeenDate": "2024-10-29 20:14:48"
+  },
+  {
+    "tvdbId": 253463,
+    "name": "Black Mirror",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 34,
+    "latestEpisodeId": 11023066,
+    "latestSeenDate": "2025-04-25 13:53:45"
+  },
+  {
+    "tvdbId": 383203,
+    "name": "Ted Lasso",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 34,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 356317,
+    "name": "Sex Education",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 32,
+    "latestEpisodeId": 9882281,
+    "latestSeenDate": "2023-10-18 20:28:21"
+  },
+  {
+    "tvdbId": 362696,
+    "name": "The Witcher",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 32,
+    "latestEpisodeId": 11355513,
+    "latestSeenDate": "2026-01-10 15:38:00"
+  },
+  {
+    "tvdbId": 336261,
+    "name": "Tom Clancy's Jack Ryan",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 30,
+    "latestEpisodeId": 9374320,
+    "latestSeenDate": "2025-07-30 17:55:44"
+  },
+  {
+    "tvdbId": 129261,
+    "name": "Spartacus",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 29,
+    "latestEpisodeId": 4469921,
+    "latestSeenDate": "2023-07-28 14:26:53"
+  },
+  {
+    "tvdbId": 413215,
+    "name": "Tulsa King",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 29,
+    "latestEpisodeId": 10564458,
+    "latestSeenDate": "2024-10-29 20:14:03"
+  },
+  {
+    "tvdbId": 367147,
+    "name": "What If…?",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 26,
+    "latestEpisodeId": 10797517,
+    "latestSeenDate": "2025-01-18 11:10:42"
+  },
+  {
+    "tvdbId": 366924,
+    "name": "Reacher",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 24,
+    "latestEpisodeId": 8868132,
+    "latestSeenDate": "2025-11-08 19:05:35"
+  },
+  {
+    "tvdbId": 366211,
+    "name": "The Sandman",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 23,
+    "latestEpisodeId": 11089800,
+    "latestSeenDate": "2025-08-27 02:37:23"
+  },
+  {
+    "tvdbId": 290853,
+    "name": "Fear the Walking Dead",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 22,
+    "latestEpisodeId": 5416096,
+    "latestSeenDate": "2016-10-01 14:32:00"
+  },
+  {
+    "tvdbId": 383275,
+    "name": "Squid Game",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 22,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 390430,
+    "name": "The White Lotus",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 21,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 370452,
+    "name": "Human Resources (2022)",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 20,
+    "latestEpisodeId": 9823908,
+    "latestSeenDate": "2023-08-16 18:23:48"
+  },
+  {
+    "tvdbId": 371028,
+    "name": "Arcane",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 18,
+    "latestEpisodeId": 10706380,
+    "latestSeenDate": "2024-12-21 12:47:37"
+  },
+  {
+    "tvdbId": 392256,
+    "name": "The Last of Us",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 18,
+    "latestEpisodeId": 9435218,
+    "latestSeenDate": "2023-03-22 18:25:48"
+  },
+  {
+    "tvdbId": 305288,
+    "name": "Stranger Things",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 17,
+    "latestEpisodeId": 5734309,
+    "latestSeenDate": "2023-09-01 17:41:17"
+  },
+  {
+    "tvdbId": 375921,
+    "name": "Lupin",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 17,
+    "latestEpisodeId": 9743656,
+    "latestSeenDate": "2023-10-14 10:24:56"
+  },
+  {
+    "tvdbId": 295685,
+    "name": "Lucifer",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 16,
+    "latestEpisodeId": 5684178,
+    "latestSeenDate": "2016-12-26 13:32:15"
+  },
+  {
+    "tvdbId": 327417,
+    "name": "Money Heist",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 16,
+    "latestEpisodeId": 7453645,
+    "latestSeenDate": "2020-06-09 16:17:30"
+  },
+  {
+    "tvdbId": 369844,
+    "name": "Shadow and Bone",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 16,
+    "latestEpisodeId": 8239386,
+    "latestSeenDate": "2021-05-23 12:42:33"
+  },
+  {
+    "tvdbId": 397060,
+    "name": "Wednesday",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 16,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 399966,
+    "name": "Sex!fy",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 16,
+    "latestEpisodeId": 8322953,
+    "latestSeenDate": "2021-05-18 13:43:10"
+  },
+  {
+    "tvdbId": 416744,
+    "name": "Fallout",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 16,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 417909,
+    "name": "Gen V",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 16,
+    "latestEpisodeId": 9907873,
+    "latestSeenDate": "2023-11-03 19:02:59"
+  },
+  {
+    "tvdbId": 282670,
+    "name": "Narcos",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 15,
+    "latestEpisodeId": 5734723,
+    "latestSeenDate": "2017-08-12 19:03:21"
+  },
+  {
+    "tvdbId": 304219,
+    "name": "Marvel's Luke Cage",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 15,
+    "latestEpisodeId": 6668392,
+    "latestSeenDate": "2020-03-23 15:46:23"
+  },
+  {
+    "tvdbId": 453280,
+    "name": "Secret Level",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 15,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 464185,
+    "name": "The Terminal List: Dark Wolf",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 12,
+    "latestEpisodeId": 11167098,
+    "latestSeenDate": "2026-04-04 22:57:14"
+  },
+  {
+    "tvdbId": 281630,
+    "name": "Scorpion",
+    "followed": false,
+    "favorited": false,
+    "episodesSeen": 11,
+    "latestEpisodeId": 5049975,
+    "latestSeenDate": "2017-06-04 20:02:04"
+  },
+  {
+    "tvdbId": 314087,
+    "name": "The Grand Tour (2016)",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 10,
+    "latestEpisodeId": 5782314,
+    "latestSeenDate": "2025-12-14 02:55:11"
+  },
+  {
+    "tvdbId": 362472,
+    "name": "Loki",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 10,
+    "latestEpisodeId": 9794216,
+    "latestSeenDate": "2023-10-28 08:38:31"
+  },
+  {
+    "tvdbId": 412366,
+    "name": "Dexter: New Blood",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 10,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 412432,
+    "name": "X-Men '97",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 10,
+    "latestEpisodeId": 10319281,
+    "latestSeenDate": "2024-08-08 11:49:36"
+  },
+  {
+    "tvdbId": 430780,
+    "name": "Dexter: Original Sin",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 10,
+    "latestEpisodeId": 10693900,
+    "latestSeenDate": "2026-01-01 00:07:23"
+  },
+  {
+    "tvdbId": 434151,
+    "name": "Blue Eye Samurai",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 10,
+    "latestEpisodeId": 10086873,
+    "latestSeenDate": "2023-11-09 11:28:17"
+  },
+  {
+    "tvdbId": 452595,
+    "name": "Dexter: Resurrection",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 10,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 360733,
+    "name": "Watchmen",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 9,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 362392,
+    "name": "WandaVision",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 9,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 392573,
+    "name": "Shōgun",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 9,
+    "latestEpisodeId": 10141082,
+    "latestSeenDate": "2024-05-17 13:26:52"
+  },
+  {
+    "tvdbId": 443433,
+    "name": "Your Friends & Neighbors",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 9,
+    "latestEpisodeId": 10819897,
+    "latestSeenDate": "2026-03-09 18:43:36"
+  },
+  {
+    "tvdbId": 270633,
+    "name": "True Detective",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 8,
+    "latestEpisodeId": 4592333,
+    "latestSeenDate": "2024-10-13 19:15:36"
+  },
+  {
+    "tvdbId": 337332,
+    "name": "Trotsky",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 8,
+    "latestEpisodeId": 6438542,
+    "latestSeenDate": "2020-03-30 19:48:22"
+  },
+  {
+    "tvdbId": 365700,
+    "name": "KAOS",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 8,
+    "latestEpisodeId": 7243504,
+    "latestSeenDate": "2024-09-30 14:21:51"
+  },
+  {
+    "tvdbId": 368388,
+    "name": "Jupiter's Legacy",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 8,
+    "latestEpisodeId": 8230963,
+    "latestSeenDate": "2021-05-08 14:22:58"
+  },
+  {
+    "tvdbId": 391153,
+    "name": "Peacemaker",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 8,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 393197,
+    "name": "The Acolyte",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 8,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 399917,
+    "name": "The Terminal List",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 8,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 403294,
+    "name": "The Bear",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 8,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 409591,
+    "name": "Tomb Raider: The Legend of Lara Croft",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 8,
+    "latestEpisodeId": 8839048,
+    "latestSeenDate": "2024-10-12 13:07:30"
+  },
+  {
+    "tvdbId": 420600,
+    "name": "Star Wars: Skeleton Crew",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 8,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 430243,
+    "name": "The Mighty Nein",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 8,
+    "latestEpisodeId": 11370988,
+    "latestSeenDate": "2026-02-01 09:14:16"
+  },
+  {
+    "tvdbId": 393589,
+    "name": "The Book of Boba Fett",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 7,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 419254,
+    "name": "Hijack",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 7,
+    "latestEpisodeId": 9266424,
+    "latestSeenDate": "2023-10-05 16:26:25"
+  },
+  {
+    "tvdbId": 362496,
+    "name": "The Falcon and The Winter Soldier",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 6,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 367146,
+    "name": "Hawkeye (2021)",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 6,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 368611,
+    "name": "Moon Knight",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 6,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 368612,
+    "name": "Ms. Marvel",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 6,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 421654,
+    "name": "Sweetpea",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 6,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 448549,
+    "name": "Star Wars: Tales of the Empire",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 6,
+    "latestEpisodeId": 10425528,
+    "latestSeenDate": "2024-10-24 18:16:27"
+  },
+  {
+    "tvdbId": 449162,
+    "name": "Last Samurai Standing",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 6,
+    "latestEpisodeId": 11427205,
+    "latestSeenDate": "2025-12-31 18:58:21"
+  },
+  {
+    "tvdbId": 393201,
+    "name": "I Am Groot",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 5,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 389200,
+    "name": "Resident Evil: Infinite Darkness",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 4,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 399987,
+    "name": "The Witcher: Blood Origin",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 4,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 257645,
+    "name": "Marvel's Ultimate Spider-Man",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 2,
+    "latestEpisodeId": 4297500,
+    "latestSeenDate": "2016-02-28 06:13:58"
+  },
+  {
+    "tvdbId": 320724,
+    "name": "Legion",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 1,
+    "latestEpisodeId": 5869915,
+    "latestSeenDate": "2024-08-10 05:02:17"
+  },
+  {
+    "tvdbId": 75897,
+    "name": "South Park",
+    "followed": false,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 77871,
+    "name": "Batman (1966)",
+    "followed": false,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 176941,
+    "name": "Sherlock",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 255316,
+    "name": "Elementary",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 259765,
+    "name": "Banshee",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 261202,
+    "name": "Dragons",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 273181,
+    "name": "Better Call Saul",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 295829,
+    "name": "The Man in the High Castle",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 311790,
+    "name": "Lethal Weapon",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 321239,
+    "name": "The Handmaid's Tale",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 331431,
+    "name": "Big Mouth",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 331980,
+    "name": "Marvel's The Punisher",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 332331,
+    "name": "Altered Carbon",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 355730,
+    "name": "The Wheel of Time",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 360115,
+    "name": "Prison Break",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 360893,
+    "name": "Chernobyl",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 361753,
+    "name": "The Mandalorian",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 387115,
+    "name": "The Queen's Gambit",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 413188,
+    "name": "The Boys Presents: Diabolical",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  },
+  {
+    "tvdbId": 459453,
+    "name": "To Be Hero X",
+    "followed": true,
+    "favorited": false,
+    "episodesSeen": 0,
+    "latestEpisodeId": null,
+    "latestSeenDate": null
+  }
+]
