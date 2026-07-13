@@ -336,11 +336,123 @@ export async function seasonCast(
   }
 }
 
-/** An actor's IMDb id (nm…), resolved on demand (cached for a day). */
-export async function personImdbId(personId: number): Promise<string | null> {
+export interface PersonImage {
+  filePath: string;
+  /** "poster" | "backdrop" | "still" — posters are usually portrait. */
+  type: string;
+  aspect: number;
+}
+
+export interface SeasonAppearance {
+  season: number;
+  episodeCount: number;
+}
+
+export interface ActorDetail {
+  id: number;
+  name: string;
+  /** The actor's own biography (TMDB has no per-character summary). */
+  biography: string;
+  profilePath: string | null;
+  birthday: string | null;
+  placeOfBirth: string | null;
+  imdbId: string | null;
+  /** The character they play in THIS show. */
+  character: string;
+  /** Total episodes of this show they appear in. */
+  totalEpisodes: number;
+  /** Period-accurate images of the actor taken from this show. */
+  showImages: PersonImage[];
+  /** Per-season episode counts within this show. */
+  appearances: SeasonAppearance[];
+  showName: string;
+}
+
+interface RawTaggedImage {
+  file_path?: string;
+  image_type?: string;
+  aspect_ratio?: number;
+  media?: { media_type?: string; id?: number; show_id?: number };
+}
+
+/**
+ * Everything the in-app actor page needs for one actor within one show:
+ * their role, per-season appearances, period images from the show, and bio.
+ * TMDB has no character biographies — only the actor's own bio.
+ */
+export async function fetchActorForShow(
+  personId: number,
+  tvId: number
+): Promise<ActorDetail | null> {
   try {
-    const d = await api(`/person/${personId}`, {}, DAY_SECONDS);
-    return (d.imdb_id as string | null) ?? null;
+    const [person, tagged, showDetails] = await Promise.all([
+      api(`/person/${personId}`, {}, DAY_SECONDS),
+      api(`/person/${personId}/tagged_images`, {}, DAY_SECONDS).catch(() => ({
+        results: [],
+      })),
+      api(`/tv/${tvId}`, {}, DAY_SECONDS),
+    ]);
+
+    const seasonNums: number[] = (showDetails.seasons ?? [])
+      .map((s: { season_number: number }) => s.season_number)
+      .filter((n: number) => n > 0);
+
+    const seasonCredits = await Promise.all(
+      seasonNums.map((n) =>
+        api(`/tv/${tvId}/season/${n}/aggregate_credits`, {}, DAY_SECONDS)
+          .then((d) => ({ n, cast: (d.cast ?? []) as RawAggregateCast[] }))
+          .catch(() => ({ n, cast: [] as RawAggregateCast[] }))
+      )
+    );
+
+    const appearances: SeasonAppearance[] = [];
+    let character = "";
+    for (const { n, cast } of seasonCredits) {
+      const c = cast.find((x) => x.id === personId);
+      if (!c) continue;
+      const ec =
+        c.total_episode_count ??
+        (c.roles ?? []).reduce((s, r) => s + (r.episode_count ?? 0), 0);
+      if (ec > 0) appearances.push({ season: n, episodeCount: ec });
+      if (!character) {
+        character =
+          (c.roles ?? [])
+            .map((r) => r.character?.trim())
+            .filter(Boolean)
+            .join(" / ") || "";
+      }
+    }
+    appearances.sort((a, b) => a.season - b.season);
+    const totalEpisodes = appearances.reduce((s, a) => s + a.episodeCount, 0);
+
+    const showImages: PersonImage[] = ((tagged.results ?? []) as RawTaggedImage[])
+      .filter(
+        (it) =>
+          it.file_path &&
+          it.media &&
+          ((it.media.media_type === "tv" && it.media.id === tvId) ||
+            (it.media.media_type === "tv_episode" && it.media.show_id === tvId))
+      )
+      .map((it) => ({
+        filePath: it.file_path as string,
+        type: it.image_type ?? "still",
+        aspect: it.aspect_ratio ?? 1.78,
+      }));
+
+    return {
+      id: person.id,
+      name: person.name,
+      biography: person.biography ?? "",
+      profilePath: person.profile_path ?? null,
+      birthday: person.birthday ?? null,
+      placeOfBirth: person.place_of_birth ?? null,
+      imdbId: person.imdb_id ?? null,
+      character,
+      totalEpisodes,
+      showImages,
+      appearances,
+      showName: showDetails.name ?? "",
+    };
   } catch {
     return null;
   }

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { CastMember } from "@/lib/tmdb";
 import PosterPlaceholder from "./PosterPlaceholder";
@@ -47,29 +48,33 @@ function ActorPhoto({ member }: { member: CastMember }) {
   );
 }
 
-function imdbHref(id: number): string {
-  return `/api/actor-imdb?id=${id}`;
-}
-
 export default function CastSection({
   tvId,
   seasons,
   seasonEpisodeCounts,
   totalEpisodes,
+  initialScope = "all",
   initialCast,
 }: {
   tvId: number;
   seasons: number[];
   seasonEpisodeCounts: Record<number, number>;
   totalEpisodes: number;
+  initialScope?: Scope;
   initialCast?: CastMember[];
 }) {
-  const [scope, setScope] = useState<Scope>("all");
+  const [scope, setScope] = useState<Scope>(initialScope);
   const [view, setView] = useState<"grid" | "list">("grid");
   const [cache, setCache] = useState<Record<string, CastMember[]>>(
-    initialCast ? { all: initialCast } : {}
+    initialCast
+      ? { [initialScope === "all" ? "all" : String(initialScope)]: initialCast }
+      : {}
   );
   const [loadingKey, setLoadingKey] = useState<string | null>(null);
+
+  function actorHref(personId: number): string {
+    return `/shows/${tvId}/cast/${personId}`;
+  }
 
   useEffect(() => {
     try {
@@ -114,7 +119,7 @@ export default function CastSection({
   const loading = cast === undefined;
 
   return (
-    <section className="mt-10">
+    <section id="cast" className="mt-10 scroll-mt-20">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-lg font-bold">Cast</h2>
         <div className="inline-flex gap-1 rounded-lg border border-border-app p-0.5">
@@ -181,15 +186,13 @@ export default function CastSection({
       ) : view === "grid" ? (
         <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5">
           {cast.map((m) => (
-            <a
+            <Link
               key={m.id}
-              href={imdbHref(m.id)}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={actorHref(m.id)}
               className="group block transition-transform active:scale-95 md:hover:scale-105"
             >
               <ActorPhoto member={m} />
-              <p className="mt-1 truncate text-xs font-semibold">
+              <p className="mt-1 truncate text-xs font-semibold group-hover:text-accent">
                 {m.character || m.name}
               </p>
               {m.character && (
@@ -200,50 +203,39 @@ export default function CastSection({
                   {descriptor(m.episodeCount, total)}
                 </p>
               )}
-              <span className="text-[10px] font-medium text-accent group-hover:underline">
-                IMDb ↗
-              </span>
-            </a>
+            </Link>
           ))}
         </div>
       ) : (
         <ul className="space-y-2">
           {cast.map((m) => (
-            <li
-              key={m.id}
-              className="flex gap-3 rounded-lg bg-surface p-2"
-            >
-              <a
-                href={imdbHref(m.id)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-16 shrink-0 sm:w-20"
+            <li key={m.id}>
+              <Link
+                href={actorHref(m.id)}
+                className="group flex gap-3 rounded-lg bg-surface p-2 transition-colors hover:bg-surface-2"
               >
-                <ActorPhoto member={m} />
-              </a>
-              <div className="min-w-0 flex-1 py-0.5">
-                <p className="truncate text-sm font-semibold">
-                  {m.character || m.name}
-                </p>
-                {m.character && (
-                  <p className="truncate text-sm text-muted">
-                    Played by {m.name}
+                <div className="w-16 shrink-0 sm:w-20">
+                  <ActorPhoto member={m} />
+                </div>
+                <div className="min-w-0 flex-1 py-0.5">
+                  <p className="truncate text-sm font-semibold group-hover:text-accent">
+                    {m.character || m.name}
                   </p>
-                )}
-                {descriptor(m.episodeCount, total) && (
-                  <p className="mt-0.5 text-xs text-muted">
-                    {descriptor(m.episodeCount, total)}
-                  </p>
-                )}
-                <a
-                  href={imdbHref(m.id)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-1 inline-block text-xs font-medium text-accent hover:underline"
-                >
-                  IMDb ↗
-                </a>
-              </div>
+                  {m.character && (
+                    <p className="truncate text-sm text-muted">
+                      Played by {m.name}
+                    </p>
+                  )}
+                  {descriptor(m.episodeCount, total) && (
+                    <p className="mt-0.5 text-xs text-muted">
+                      {descriptor(m.episodeCount, total)}
+                    </p>
+                  )}
+                  <span className="mt-1 inline-block text-xs font-medium text-accent group-hover:underline">
+                    View actor →
+                  </span>
+                </div>
+              </Link>
             </li>
           ))}
         </ul>

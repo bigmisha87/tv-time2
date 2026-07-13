@@ -16,7 +16,12 @@ import {
   posterUrl,
   today,
 } from "@/lib/store";
-import { fetchShowPreview, showCast, showTrailerKey } from "@/lib/tmdb";
+import {
+  fetchShowPreview,
+  seasonCast,
+  showCast,
+  showTrailerKey,
+} from "@/lib/tmdb";
 
 function Poster({
   src,
@@ -132,10 +137,6 @@ export default async function ShowDetailPage({
   const aired = show.episodes.filter((e) => hasAired(e, t));
   const watched = show.episodes.filter((e) => e.watched).length;
   const poster = posterUrl(show.posterPath, "w342");
-  const [trailerKey, cast] = await Promise.all([
-    showTrailerKey(show.tmdbId),
-    showCast(show.tmdbId),
-  ]);
 
   const seasons = [...new Set(show.episodes.map((e) => e.season))].sort(
     (a, b) => a - b
@@ -144,6 +145,18 @@ export default async function ShowDetailPage({
   for (const e of show.episodes) {
     seasonEpisodeCounts[e.season] = (seasonEpisodeCounts[e.season] ?? 0) + 1;
   }
+  // The cast opens on the same season the episode list opens on: the first
+  // aired-but-unwatched season, otherwise the latest.
+  const firstUnwatched = show.episodes.find(
+    (e) => e.airDate && e.airDate <= t && !e.watched
+  );
+  const defaultSeason =
+    firstUnwatched?.season ?? seasons[seasons.length - 1] ?? 1;
+
+  const [trailerKey, cast] = await Promise.all([
+    showTrailerKey(show.tmdbId),
+    seasonCast(show.tmdbId, defaultSeason),
+  ]);
 
   return (
     <div>
@@ -213,6 +226,12 @@ export default async function ShowDetailPage({
               </a>
             )}
             <ListButtons tmdbId={show.tmdbId} initial={show.lists ?? []} />
+            <a
+              href="#cast"
+              className="rounded-lg border border-border-app px-3 py-1.5 text-sm font-medium text-muted transition-colors hover:border-accent hover:text-accent"
+            >
+              🎭 Cast ↓
+            </a>
           </div>
         </div>
       </div>
@@ -232,6 +251,7 @@ export default async function ShowDetailPage({
         seasons={seasons}
         seasonEpisodeCounts={seasonEpisodeCounts}
         totalEpisodes={show.episodes.length}
+        initialScope={defaultSeason}
         initialCast={cast}
       />
     </div>
