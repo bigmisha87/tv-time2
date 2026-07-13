@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import AppNav from "@/components/AppNav";
-import { getAllShows, newEpisodeAirDates } from "@/lib/store";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,13 +32,11 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const newEpisodeDates = newEpisodeAirDates(await getAllShows());
-
   return (
     <html
       lang="en"
@@ -57,7 +54,7 @@ export default async function RootLayout({
         />
       </head>
       <body className="min-h-full">
-        <AppNav newEpisodeDates={newEpisodeDates} />
+        <AppNav />
         <main className="mx-auto max-w-5xl px-4 pb-24 pt-[calc(env(safe-area-inset-top)_+_1rem)] md:pb-10 md:pt-6">
           {children}
         </main>

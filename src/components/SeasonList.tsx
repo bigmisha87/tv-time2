@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { markSeasonWatched, setEpisodeWatched } from "@/lib/actions";
 import type { StoredEpisode } from "@/lib/store";
 import TrailerPlayer from "./TrailerPlayer";
@@ -30,6 +30,24 @@ export default function SeasonList({
     Record<number, string | null>
   >({});
 
+  // Keep the selected season chip centered in the horizontal strip, so on an
+  // advanced season you can see which one you're on without scrolling sideways.
+  const chipRowRef = useRef<HTMLDivElement>(null);
+  const activeChipRef = useRef<HTMLButtonElement>(null);
+  const didInitScroll = useRef(false);
+  useEffect(() => {
+    const row = chipRowRef.current;
+    const chip = activeChipRef.current;
+    if (!row || !chip) return;
+    const delta =
+      chip.offsetLeft - row.clientWidth / 2 + chip.clientWidth / 2 - row.scrollLeft;
+    row.scrollBy({
+      left: delta,
+      behavior: didInitScroll.current ? "smooth" : "auto",
+    });
+    didInitScroll.current = true;
+  }, [season]);
+
   useEffect(() => {
     if (seasonTrailers[season] !== undefined) return;
     let cancelled = false;
@@ -56,10 +74,14 @@ export default function SeasonList({
   return (
     <div className={isPending ? "opacity-60 transition-opacity" : ""}>
       {/* Season chips */}
-      <div className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2">
+      <div
+        ref={chipRowRef}
+        className="relative -mx-4 flex gap-2 overflow-x-auto px-4 pb-2"
+      >
         {seasons.map((s) => (
           <button
             key={s}
+            ref={s === season ? activeChipRef : undefined}
             onClick={() => setSeason(s)}
             className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
               s === season

@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import ShowCard from "@/components/ShowCard";
+import FavoritesSection from "@/components/FavoritesSection";
 import {
   airedUnwatchedCount,
   classifyShow,
@@ -89,30 +89,20 @@ export default async function ProfilePage() {
       >
         <div>
           <p className="text-sm font-medium">⚙ Settings</p>
-          <p className="text-xs text-muted">Theme, new-episode alerts</p>
+          <p className="text-xs text-muted">Theme &amp; appearance</p>
         </div>
         <span className="text-muted">→</span>
       </Link>
 
-      {favorites.length > 0 && (
-        <section className="mt-8">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">
-            ❤️ Favorite shows
-          </h2>
-          <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
-            {favorites.map((show) => (
-              <ShowCard
-                key={show.tmdbId}
-                tmdbId={show.tmdbId}
-                name={show.name}
-                posterUrl={posterUrl(show.posterPath)}
-                badge={airedUnwatchedCount(show)}
-                progress={watchProgress(show)}
-              />
-            ))}
-          </div>
-        </section>
-      )}
+      <FavoritesSection
+        favorites={favorites.map((show) => ({
+          tmdbId: show.tmdbId,
+          name: show.name,
+          posterUrl: posterUrl(show.posterPath),
+          badge: airedUnwatchedCount(show),
+          progress: watchProgress(show),
+        }))}
+      />
 
       {store && (
         <p className="mt-8 text-center text-xs text-muted">

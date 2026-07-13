@@ -4,15 +4,11 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import PosterPlaceholder from "@/components/PosterPlaceholder";
 import SeasonList from "@/components/SeasonList";
+import CastSection from "@/components/CastSection";
 import TrailerPlayer from "@/components/TrailerPlayer";
 import StarRating from "@/components/StarRating";
 import ListButtons from "@/components/ListButtons";
-import {
-  addShow,
-  setFavorited,
-  setFollowed,
-  setSeasonWait,
-} from "@/lib/actions";
+import { addShow, setFavorited, setFollowed } from "@/lib/actions";
 import {
   averageRuntime,
   getShowById,
@@ -20,7 +16,7 @@ import {
   posterUrl,
   today,
 } from "@/lib/store";
-import { fetchShowPreview, showTrailerKey } from "@/lib/tmdb";
+import { fetchShowPreview, showCast, showTrailerKey } from "@/lib/tmdb";
 
 function Poster({
   src,
@@ -56,6 +52,7 @@ export default async function ShowDetailPage({
   if (!show) {
     const preview = await fetchShowPreview(tmdbId);
     if (!preview) notFound();
+    const previewCast = await showCast(tmdbId);
 
     return (
       <div>
@@ -115,6 +112,17 @@ export default async function ShowDetailPage({
             <TrailerPlayer videoKey={preview.trailerKey} label="Watch trailer" />
           </div>
         )}
+
+        <CastSection
+          tvId={tmdbId}
+          seasons={Array.from(
+            { length: preview.seasonCount },
+            (_, i) => i + 1
+          )}
+          seasonEpisodeCounts={{}}
+          totalEpisodes={0}
+          initialCast={previewCast}
+        />
       </div>
     );
   }
@@ -124,7 +132,18 @@ export default async function ShowDetailPage({
   const aired = show.episodes.filter((e) => hasAired(e, t));
   const watched = show.episodes.filter((e) => e.watched).length;
   const poster = posterUrl(show.posterPath, "w342");
-  const trailerKey = await showTrailerKey(show.tmdbId);
+  const [trailerKey, cast] = await Promise.all([
+    showTrailerKey(show.tmdbId),
+    showCast(show.tmdbId),
+  ]);
+
+  const seasons = [...new Set(show.episodes.map((e) => e.season))].sort(
+    (a, b) => a - b
+  );
+  const seasonEpisodeCounts: Record<number, number> = {};
+  for (const e of show.episodes) {
+    seasonEpisodeCounts[e.season] = (seasonEpisodeCounts[e.season] ?? 0) + 1;
+  }
 
   return (
     <div>
@@ -194,22 +213,6 @@ export default async function ShowDetailPage({
               </a>
             )}
             <ListButtons tmdbId={show.tmdbId} initial={show.lists ?? []} />
-            <form
-              action={setSeasonWait.bind(null, show.tmdbId, !show.seasonWait)}
-            >
-              <button
-                type="submit"
-                className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
-                  show.seasonWait
-                    ? "border-accent text-accent"
-                    : "border-border-app text-muted hover:text-foreground"
-                }`}
-              >
-                {show.seasonWait
-                  ? "⏸ Waiting for season"
-                  : "Wait for full season"}
-              </button>
-            </form>
           </div>
         </div>
       </div>
@@ -223,6 +226,14 @@ export default async function ShowDetailPage({
       <div className="mt-8">
         <SeasonList tmdbId={show.tmdbId} episodes={show.episodes} todayStr={t} />
       </div>
+
+      <CastSection
+        tvId={show.tmdbId}
+        seasons={seasons}
+        seasonEpisodeCounts={seasonEpisodeCounts}
+        totalEpisodes={show.episodes.length}
+        initialCast={cast}
+      />
     </div>
   );
 }

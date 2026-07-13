@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 
 const TABS = [
   {
@@ -66,34 +65,8 @@ function isActive(pathname: string, href: string) {
   return href === "/" ? pathname === "/" : pathname.startsWith(href);
 }
 
-export default function AppNav({
-  newEpisodeDates = [],
-}: {
-  newEpisodeDates?: string[];
-}) {
+export default function AppNav() {
   const pathname = usePathname();
-  const [newCount, setNewCount] = useState(0);
-
-  // The badge count lives client-side so "mark as seen" and the alerts
-  // toggle (both stored per device) can clear or hide it instantly.
-  const datesKey = newEpisodeDates.join(",");
-  useEffect(() => {
-    function recompute() {
-      let enabled = true;
-      let lastSeen = "";
-      try {
-        enabled = localStorage.getItem("notify-badge") !== "off";
-        lastSeen = localStorage.getItem("neweps-seen") ?? "";
-      } catch {}
-      setNewCount(
-        enabled ? newEpisodeDates.filter((d) => d > lastSeen).length : 0
-      );
-    }
-    recompute();
-    window.addEventListener("tvtime:settings", recompute);
-    return () => window.removeEventListener("tvtime:settings", recompute);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [datesKey]);
 
   return (
     <>
@@ -115,11 +88,6 @@ export default function AppNav({
                 }`}
               >
                 {tab.label}
-                {tab.href === "/calendar" && newCount > 0 && (
-                  <span className="ml-1.5 inline-flex min-w-[1.1rem] items-center justify-center rounded-full bg-badge px-1 text-[11px] font-bold text-white">
-                    {newCount}
-                  </span>
-                )}
               </Link>
             ))}
           </nav>
@@ -177,11 +145,6 @@ export default function AppNav({
                   >
                     {tab.icon}
                   </svg>
-                  {tab.href === "/calendar" && newCount > 0 && (
-                    <span className="absolute -right-2 -top-1 inline-flex min-w-[1.05rem] items-center justify-center rounded-full bg-badge px-1 text-[10px] font-bold text-white">
-                      {newCount}
-                    </span>
-                  )}
                 </span>
                 {tab.label}
               </Link>

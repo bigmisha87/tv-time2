@@ -93,18 +93,6 @@ export async function setRating(tmdbId: number, rating: number): Promise<void> {
   refresh();
 }
 
-/** Wait for the full season: exclude this show from new-episode alerts. */
-export async function setSeasonWait(
-  tmdbId: number,
-  wait: boolean
-): Promise<void> {
-  const show = await getShowById(tmdbId);
-  if (!show) return;
-  show.seasonWait = wait;
-  await saveShow(show);
-  refresh();
-}
-
 /** Toggle membership of a show in one of the personal lists. */
 export async function toggleList(
   tmdbId: number,

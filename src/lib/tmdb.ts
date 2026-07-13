@@ -265,6 +265,87 @@ export async function fetchShowPreview(
   }
 }
 
+export interface CastMember {
+  /** TMDB person id — used to resolve the actor's IMDb page on demand. */
+  id: number;
+  /** Actor's real name. */
+  name: string;
+  /** Character(s) they play (joined with " / " when more than one). */
+  character: string;
+  /** Profile photo path, or null when TMDB has none. */
+  profilePath: string | null;
+  /** Billing order (lower = more prominent). */
+  order: number;
+  /** Episodes the actor appears in, within the requested scope. */
+  episodeCount: number;
+}
+
+interface RawAggregateCast {
+  id: number;
+  name: string;
+  profile_path?: string | null;
+  order?: number;
+  total_episode_count?: number;
+  roles?: { character?: string; episode_count?: number }[];
+}
+
+function toCast(raw: RawAggregateCast[] | undefined, limit: number): CastMember[] {
+  return (raw ?? [])
+    .map((c) => ({
+      id: c.id,
+      name: c.name,
+      character:
+        (c.roles ?? [])
+          .map((r) => r.character?.trim())
+          .filter(Boolean)
+          .join(" / ") || "",
+      profilePath: c.profile_path ?? null,
+      order: c.order ?? 999,
+      episodeCount:
+        c.total_episode_count ??
+        (c.roles ?? []).reduce((n, r) => n + (r.episode_count ?? 0), 0),
+    }))
+    .sort((a, b) => a.order - b.order)
+    .slice(0, limit);
+}
+
+/** Full-series cast, aggregated across every season (cached for a day). */
+export async function showCast(tvId: number): Promise<CastMember[]> {
+  try {
+    const data = await api(`/tv/${tvId}/aggregate_credits`, {}, DAY_SECONDS);
+    return toCast(data.cast as RawAggregateCast[], 60);
+  } catch {
+    return [];
+  }
+}
+
+/** Cast for a single season, with per-season episode counts (cached a day). */
+export async function seasonCast(
+  tvId: number,
+  season: number
+): Promise<CastMember[]> {
+  try {
+    const data = await api(
+      `/tv/${tvId}/season/${season}/aggregate_credits`,
+      {},
+      DAY_SECONDS
+    );
+    return toCast(data.cast as RawAggregateCast[], 50);
+  } catch {
+    return [];
+  }
+}
+
+/** An actor's IMDb id (nm…), resolved on demand (cached for a day). */
+export async function personImdbId(personId: number): Promise<string | null> {
+  try {
+    const d = await api(`/person/${personId}`, {}, DAY_SECONDS);
+    return (d.imdb_id as string | null) ?? null;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Aggregated TMDB recommendations for the given seed shows.
  * Earlier seeds weigh more; shows already in `excludeIds` are dropped.
