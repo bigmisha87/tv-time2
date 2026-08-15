@@ -5,6 +5,27 @@ import { markSeasonWatched, setEpisodeWatched } from "@/lib/actions";
 import type { StoredEpisode } from "@/lib/store";
 import TrailerPlayer from "./TrailerPlayer";
 
+// Whole days from today until an episode airs. Both sides are parsed at UTC
+// midnight so the subtraction can't be thrown off by daylight-saving shifts.
+function daysUntil(from: string, to: string) {
+  const ms =
+    new Date(to + "T00:00:00Z").getTime() -
+    new Date(from + "T00:00:00Z").getTime();
+  return Math.round(ms / 86400000);
+}
+
+function countdownLabel(days: number) {
+  if (days === 0) return "Today";
+  if (days === 1) return "Tomorrow";
+  return `${days} Days`;
+}
+
+// Israeli day-first display: 07.12.2026
+function formatDate(iso: string) {
+  const [y, m, d] = iso.split("-");
+  return `${d}.${m}.${y}`;
+}
+
 export default function SeasonList({
   tmdbId,
   episodes,
@@ -165,7 +186,7 @@ export default function SeasonList({
                       {ep.episode}. {ep.name}
                     </p>
                     <p className="text-xs text-muted">
-                      {ep.airDate ?? "TBA"}
+                      {ep.airDate ? formatDate(ep.airDate) : "TBA"}
                       {!aired && ep.airDate ? " · upcoming" : ""}
                       {ep.runtime ? ` · ${ep.runtime} min` : ""}
                       {ep.imdbRating
@@ -175,6 +196,11 @@ export default function SeasonList({
                           : ""}
                     </p>
                   </span>
+                  {!aired && ep.airDate && (
+                    <span className="shrink-0 text-base font-semibold leading-tight">
+                      {countdownLabel(daysUntil(todayStr, ep.airDate))}
+                    </span>
+                  )}
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"

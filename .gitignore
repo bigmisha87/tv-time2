@@ -33,6 +33,16 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# personal watch-history backups — never publish these
+/data/backups/
+
+# personal exports from TV Time (the repo is public)
+/docs/my_shows_export.csv
+/docs/gdpr-data.zip
+
+# local editor / agent settings
+/.claude/
+
 # vercel
 .vercel
 

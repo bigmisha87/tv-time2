@@ -1,3 +1,4 @@
+import type { PaginatedDiscoverSlug } from "./discoverLists";
 import type { StoredEpisode, StoredShow } from "./store";
 
 const token = process.env.TMDB_READ_TOKEN;
@@ -48,31 +49,85 @@ function toResult(r: RawListResult): TmdbSearchResult {
 
 const DAY_SECONDS = 60 * 60 * 24;
 
-/** Popular shows premiering in the next 90 days (cached for a day). */
-export async function upcomingPremieres(): Promise<TmdbSearchResult[]> {
-  try {
-    const today = new Date().toISOString().slice(0, 10);
-    const horizon = new Date(Date.now() + 90 * 86_400_000)
-      .toISOString()
-      .slice(0, 10);
-    const data = await api(
-      "/discover/tv",
-      {
-        "first_air_date.gte": today,
-        "first_air_date.lte": horizon,
+/**
+ * The `/discover/tv` query behind each Discover row. Kept in one place so the
+ * short row previews and the paginated full-list pages always request the same
+ * shows in the same order. "recommended" isn't here — it's aggregated from your
+ * own watch history, not a single TMDB query.
+ */
+function discoverParams(slug: PaginatedDiscoverSlug): Record<string, string> {
+  switch (slug) {
+    case "trending":
+      return {
+        sort_by: "popularity.desc",
+        with_original_language: "en",
+        "vote_count.gte": "50",
+        "air_date.gte": new Date(Date.now() - 120 * 86_400_000)
+          .toISOString()
+          .slice(0, 10),
+      };
+    case "top-rated":
+      return {
+        sort_by: "vote_average.desc",
+        with_original_language: "en",
+        "vote_count.gte": "1000",
+      };
+    case "acclaimed":
+      return {
+        sort_by: "vote_count.desc",
+        with_original_language: "en",
+        "vote_average.gte": "8",
+      };
+    case "upcoming":
+      return {
+        "first_air_date.gte": new Date().toISOString().slice(0, 10),
+        "first_air_date.lte": new Date(Date.now() + 90 * 86_400_000)
+          .toISOString()
+          .slice(0, 10),
         sort_by: "popularity.desc",
         include_null_first_air_dates: "false",
         with_original_language: "en",
-      },
+      };
+  }
+}
+
+export interface DiscoverListPage {
+  results: TmdbSearchResult[];
+  page: number;
+  totalPages: number;
+}
+
+/**
+ * One page (20 shows) of a paginated Discover list, with posters only.
+ * Pages are cached for a day. TMDB caps discovery at 500 pages.
+ */
+export async function discoverListPage(
+  slug: PaginatedDiscoverSlug,
+  page: number
+): Promise<DiscoverListPage> {
+  const safePage = Math.min(Math.max(1, Math.floor(page) || 1), 500);
+  try {
+    const data = await api(
+      "/discover/tv",
+      { ...discoverParams(slug), page: String(safePage) },
       DAY_SECONDS
     );
-    return ((data.results ?? []) as RawListResult[])
-      .filter((r) => r.poster_path)
-      .slice(0, 12)
-      .map(toResult);
+    return {
+      results: ((data.results ?? []) as RawListResult[])
+        .filter((r) => r.poster_path)
+        .map(toResult),
+      page: data.page ?? safePage,
+      totalPages: Math.min(data.total_pages ?? safePage, 500),
+    };
   } catch {
-    return [];
+    return { results: [], page: safePage, totalPages: safePage };
   }
+}
+
+/** Popular shows premiering in the next 90 days (cached for a day). */
+export async function upcomingPremieres(): Promise<TmdbSearchResult[]> {
+  const { results } = await discoverListPage("upcoming", 1);
+  return results.slice(0, 12);
 }
 
 /** Map a raw /discover or /trending list to English shows with posters. */
@@ -88,59 +143,20 @@ function toResultList(
 
 /** Trending this week (cached for a day). */
 export async function trendingShows(): Promise<TmdbSearchResult[]> {
-  try {
-    const data = await api(
-      "/discover/tv",
-      {
-        sort_by: "popularity.desc",
-        with_original_language: "en",
-        "vote_count.gte": "50",
-        "air_date.gte": new Date(Date.now() - 120 * 86_400_000)
-          .toISOString()
-          .slice(0, 10),
-      },
-      DAY_SECONDS
-    );
-    return toResultList((data.results ?? []) as RawListResult[]);
-  } catch {
-    return [];
-  }
+  const { results } = await discoverListPage("trending", 1);
+  return results.slice(0, 18);
 }
 
 /** Highest-rated shows of all time with enough votes to be meaningful. */
 export async function topRatedShows(): Promise<TmdbSearchResult[]> {
-  try {
-    const data = await api(
-      "/discover/tv",
-      {
-        sort_by: "vote_average.desc",
-        with_original_language: "en",
-        "vote_count.gte": "1000",
-      },
-      DAY_SECONDS
-    );
-    return toResultList((data.results ?? []) as RawListResult[]);
-  } catch {
-    return [];
-  }
+  const { results } = await discoverListPage("top-rated", 1);
+  return results.slice(0, 18);
 }
 
 /** Critically acclaimed: strong ratings from a very large audience. */
 export async function acclaimedShows(): Promise<TmdbSearchResult[]> {
-  try {
-    const data = await api(
-      "/discover/tv",
-      {
-        sort_by: "vote_count.desc",
-        with_original_language: "en",
-        "vote_average.gte": "8",
-      },
-      DAY_SECONDS
-    );
-    return toResultList((data.results ?? []) as RawListResult[]);
-  } catch {
-    return [];
-  }
+  const { results } = await discoverListPage("acclaimed", 1);
+  return results.slice(0, 18);
 }
 
 export interface TvGenre {
@@ -464,7 +480,8 @@ export async function fetchActorForShow(
  */
 export async function recommendationsFor(
   seedIds: number[],
-  excludeIds: Set<number>
+  excludeIds: Set<number>,
+  limit = 18
 ): Promise<TmdbSearchResult[]> {
   const scores = new Map<number, { score: number; result: TmdbSearchResult }>();
   const lists = await Promise.all(
@@ -483,7 +500,7 @@ export async function recommendationsFor(
   });
   return [...scores.values()]
     .sort((a, b) => b.score - a.score)
-    .slice(0, 18)
+    .slice(0, limit)
     .map((e) => e.result);
 }
 

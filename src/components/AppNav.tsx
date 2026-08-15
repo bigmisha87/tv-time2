@@ -73,7 +73,10 @@ export default function AppNav() {
       {/* Desktop: top bar */}
       <header className="sticky top-0 z-20 hidden border-b border-border-app bg-surface/90 backdrop-blur md:block">
         <div className="mx-auto flex h-14 max-w-5xl items-center gap-8 px-4">
-          <Link href="/" className="text-lg font-extrabold tracking-tight text-accent">
+          <Link
+            href="/"
+            className="inline-block text-lg font-extrabold tracking-tight text-accent transition-transform duration-200 hover:scale-105 hover:drop-shadow-[0_0_10px_var(--color-accent)] active:scale-95"
+          >
             TV&nbsp;TIME&nbsp;2
           </Link>
           <nav className="flex gap-6">
