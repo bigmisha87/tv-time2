@@ -6,6 +6,7 @@ import {
   classifyShow,
   getFollowedShows,
   nextUpcomingEpisode,
+  posterSrcSet,
   posterUrl,
   today,
   watchProgress,
@@ -37,6 +38,7 @@ function ShowGrid({ shows }: { shows: StoredShow[] }) {
           tmdbId={show.tmdbId}
           name={show.name}
           posterUrl={posterUrl(show.posterPath)}
+          posterSrcSet={posterSrcSet(show.posterPath)}
           badge={airedUnwatchedCount(show)}
           progress={watchProgress(show)}
           caption={upcomingCaption(show)}

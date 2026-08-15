@@ -1,3 +1,5 @@
+import { unstable_cache } from "next/cache";
+import { cache } from "react";
 import { supabase } from "./supabase";
 
 export interface StoredEpisode {
@@ -43,18 +45,98 @@ export interface Store {
 }
 
 /**
+ * Cache tag covering every read of the library. Any write in actions.ts
+ * invalidates it, so a change is visible on the very next page view.
+ */
+export const SHOWS_TAG = "shows";
+
+/**
  * Every show is one row: { tmdb_id, data } where data is the full StoredShow.
  * Storing the whole object as one document means new fields (ratings, lists)
  * never require a database structure change.
+ *
+ * List screens never render episode synopses, but those synopses are over half
+ * the bytes and push the library past Next's 2MB data-cache ceiling — meaning
+ * the untrimmed library cannot be cached at all. So both read paths below drop
+ * them. `shows_lite` (see scripts/supabase-lite-view.sql) drops them in the
+ * database, which also halves the transfer; the fallback drops them here,
+ * which at least restores caching.
  */
-export async function getAllShows(): Promise<StoredShow[]> {
-  const { data, error } = await supabase.from("shows").select("data");
-  if (error) {
-    console.error("Supabase getAllShows failed:", error.message);
-    return [];
-  }
+async function fetchLiteShows(): Promise<StoredShow[]> {
+  const { data, error } = await supabase.from("shows_lite").select("data");
+  if (error) throw new Error(error.message);
   return (data ?? []).map((row) => row.data as StoredShow);
 }
+
+/**
+ * Fallback for when the trimmed view hasn't been created. The synopses still
+ * cross the wire, but dropping them here keeps the result under the 2MB cache
+ * ceiling, so repeat page views are still spared a database round trip. Only
+ * the show detail page renders synopses, and it reads full documents through
+ * getShowById.
+ */
+async function fetchFullShowsTrimmed(): Promise<StoredShow[]> {
+  const { data, error } = await supabase.from("shows").select("data");
+  if (error) throw new Error(error.message);
+  return (data ?? []).map((row) => {
+    const show = row.data as StoredShow;
+    return {
+      ...show,
+      episodes: show.episodes.map((ep) => ({ ...ep, overview: "" })),
+    };
+  });
+}
+
+/**
+ * Keeps the library between requests, so a page view only reaches the database
+ * after something actually changed — every write in actions.ts expires the
+ * tag. The time limit is a backstop for changes made outside the app, like the
+ * sync scripts.
+ */
+const loadLiteShows = unstable_cache(fetchLiteShows, ["all-shows-lite"], {
+  tags: [SHOWS_TAG],
+  revalidate: 900,
+});
+
+const loadFullShows = unstable_cache(
+  fetchFullShowsTrimmed,
+  ["all-shows-full"],
+  { tags: [SHOWS_TAG], revalidate: 900 }
+);
+
+/** Flipped off for good the first time the trimmed view turns out to be absent. */
+let liteViewAvailable = true;
+
+/**
+ * React `cache` deduplicates within a single render: the Profile page asks for
+ * the library twice, and without this it would fetch it twice.
+ */
+export const getAllShows = cache(async function getAllShows(): Promise<
+  StoredShow[]
+> {
+  if (liteViewAvailable) {
+    try {
+      return await loadLiteShows();
+    } catch (err) {
+      liteViewAvailable = false;
+      console.warn(
+        `shows_lite view unavailable (${
+          err instanceof Error ? err.message : err
+        }); falling back to full documents. ` +
+          `Run scripts/supabase-lite-view.sql to halve the transfer.`
+      );
+    }
+  }
+
+  try {
+    return await loadFullShows();
+  } catch (err) {
+    console.error(
+      `Supabase getAllShows failed: ${err instanceof Error ? err.message : err}`
+    );
+    return [];
+  }
+});
 
 export async function getStore(): Promise<Store | null> {
   const shows = await getAllShows();
@@ -176,7 +258,13 @@ export function totalWatchedMinutes(shows: StoredShow[]): number {
   return minutes;
 }
 
-export async function getShowById(
+/**
+ * Reads the full `shows` table, not the trimmed view — the detail page is the
+ * one screen that shows episode synopses. Deduplicated per render, but never
+ * cached between requests: a server action re-reads this immediately after
+ * writing, so a stale copy here would silently undo the change.
+ */
+export const getShowById = cache(async function getShowById(
   tmdbId: number
 ): Promise<StoredShow | undefined> {
   const { data, error } = await supabase
@@ -189,11 +277,9 @@ export async function getShowById(
     return undefined;
   }
   return (data?.data as StoredShow | undefined) ?? undefined;
-}
+});
 
-export function posterUrl(
-  path: string | null,
-  size: "w185" | "w342" | "w500" = "w342"
-): string | null {
-  return path ? `https://image.tmdb.org/t/p/${size}${path}` : null;
-}
+// Image URL helpers live in ./images so browser components can use them
+// without dragging the service-role Supabase client into the bundle.
+// Re-exported here because server pages already import them from this module.
+export { posterUrl, posterSrcSet, POSTER_GRID_SIZES } from "./images";

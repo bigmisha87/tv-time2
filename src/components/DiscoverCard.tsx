@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { POSTER_GRID_SIZES, posterSrcSet } from "@/lib/images";
 import type { TmdbSearchResult } from "@/lib/tmdb";
 import PosterPlaceholder from "./PosterPlaceholder";
 
@@ -49,8 +50,13 @@ export default function DiscoverCard({
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={`https://image.tmdb.org/t/p/w342${r.posterPath}`}
+              srcSet={posterSrcSet(r.posterPath)}
+              // Rows render fixed-width cards; the search and genre grids
+              // share the same breakpoints as the rest of the app.
+              sizes={width ? "128px" : POSTER_GRID_SIZES}
               alt={r.name}
               loading="lazy"
+              decoding="async"
               className="h-full w-full object-cover"
             />
           ) : (

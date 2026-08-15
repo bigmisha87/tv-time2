@@ -1,16 +1,30 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import {
   getShowById,
   saveShow,
   today,
+  SHOWS_TAG,
   type ShowList,
   type StoredShow,
 } from "./store";
 import { fetchFullShow } from "./tmdb";
 
+/**
+ * Called after every write. `updateTag` expires the cached library so the next
+ * page view reads the change back from the database; `revalidatePath` throws
+ * away the rendered pages built from the old copy. Both are needed — without
+ * the tag, screens would keep rendering the previous state.
+ *
+ * `updateTag` rather than `revalidateTag`: the latter now serves stale content
+ * while it refreshes in the background, so ticking an episode could still show
+ * it unticked. `updateTag` makes the next read wait for fresh data, which is
+ * what "read your own writes" requires. It only works inside Server Actions —
+ * fine here, since every write in this app is one.
+ */
 function refresh() {
+  updateTag(SHOWS_TAG);
   revalidatePath("/", "layout");
 }
 

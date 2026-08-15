@@ -2,12 +2,16 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { POSTER_GRID_SIZES } from "@/lib/images";
 import PosterPlaceholder from "./PosterPlaceholder";
 
 export interface UpNextItem {
   tmdbId: number;
   name: string;
   poster: string | null;
+  /** Same poster at several widths, so the list view's thumbnail can pick a
+   * small file instead of the full-size grid poster. */
+  posterSrcSet?: string;
   code: string;
   epName: string;
   progress: number;
@@ -72,8 +76,11 @@ export default function UpNextClient({ items }: { items: UpNextItem[] }) {
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={it.poster}
+                      srcSet={it.posterSrcSet}
+                      sizes={POSTER_GRID_SIZES}
                       alt={it.name}
                       loading="lazy"
+                      decoding="async"
                       className="h-full w-full object-cover"
                     />
                   ) : (
@@ -113,8 +120,11 @@ export default function UpNextClient({ items }: { items: UpNextItem[] }) {
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={it.poster}
+                        srcSet={it.posterSrcSet}
+                        sizes="48px"
                         alt={it.name}
                         loading="lazy"
+                        decoding="async"
                         className="h-full w-full object-cover"
                       />
                     ) : (

@@ -5,6 +5,7 @@ import {
   getFollowedShows,
   lastActivity,
   nextUnwatched,
+  posterSrcSet,
   posterUrl,
   watchProgress,
 } from "@/lib/store";
@@ -25,6 +26,7 @@ export default async function UpNextPage() {
         tmdbId: show.tmdbId,
         name: show.name,
         poster: posterUrl(show.posterPath),
+        posterSrcSet: posterSrcSet(show.posterPath),
         code: `S${String(ep.season).padStart(2, "0")} | E${String(ep.episode).padStart(2, "0")}`,
         epName: ep.name,
         progress: watchProgress(show),

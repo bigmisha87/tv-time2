@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { POSTER_GRID_SIZES } from "@/lib/images";
 import PosterPlaceholder from "./PosterPlaceholder";
 
 export default function ShowCard({
   tmdbId,
   name,
   posterUrl,
+  posterSrcSet,
   badge,
   progress,
   caption,
@@ -12,6 +14,7 @@ export default function ShowCard({
   tmdbId: number;
   name: string;
   posterUrl: string | null;
+  posterSrcSet?: string;
   badge?: number;
   progress?: number;
   caption?: string;
@@ -27,8 +30,11 @@ export default function ShowCard({
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={posterUrl}
+              srcSet={posterSrcSet}
+              sizes={POSTER_GRID_SIZES}
               alt={name}
               loading="lazy"
+              decoding="async"
               className="h-full w-full object-cover"
             />
           ) : (

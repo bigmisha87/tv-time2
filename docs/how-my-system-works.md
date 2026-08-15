@@ -186,6 +186,7 @@ npm run backup
 | `sync-omdb.mjs` | מושך דירוגי IMDb חסרים |
 | `migrate-to-supabase.mjs` | מעלה את הגיבוי המקומי לענן |
 | `supabase-schema.sql` | בונה את הטבלה בענן מאפס |
+| `supabase-lite-view.sql` | מזרז את טעינת המסכים |
 | `seed-from-csv.mjs` | ממיר את הייצוא המקורי |
 | `make-icons.mjs` | מייצר את אייקוני האפליקציה |
 
