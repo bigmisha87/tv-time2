@@ -1,3 +1,4 @@
+import { ViewTransition } from "react";
 import Link from "next/link";
 import { POSTER_GRID_SIZES } from "@/lib/images";
 import PosterPlaceholder from "./PosterPlaceholder";
@@ -25,6 +26,7 @@ export default function ShowCard({
       className="group block transition-transform active:scale-95 md:hover:scale-105"
     >
       <div className="relative overflow-hidden rounded-lg bg-surface shadow-md">
+        <ViewTransition name={`poster-${tmdbId}`} share="poster-morph" default="none">
         <div className="aspect-[2/3] w-full">
           {posterUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -41,6 +43,7 @@ export default function ShowCard({
             <PosterPlaceholder name={name} />
           )}
         </div>
+        </ViewTransition>
         {progress !== undefined && (
           <div className="h-1 w-full bg-black/60">
             <div

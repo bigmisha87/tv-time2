@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import { ViewTransition } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import PosterPlaceholder from "@/components/PosterPlaceholder";
@@ -26,12 +27,15 @@ import {
 function Poster({
   src,
   name,
+  tmdbId,
 }: {
   src: string | null;
   name: string;
+  tmdbId: number;
 }) {
   return (
     <div className="w-28 shrink-0 overflow-hidden rounded-lg shadow-lg sm:w-36">
+      <ViewTransition name={`poster-${tmdbId}`} share="poster-morph" default="none">
       <div className="aspect-[2/3]">
         {src ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -40,6 +44,7 @@ function Poster({
           <PosterPlaceholder name={name} />
         )}
       </div>
+      </ViewTransition>
     </div>
   );
 }
@@ -69,7 +74,7 @@ export default async function ShowDetailPage({
         </Link>
 
         <div className="mt-4 flex gap-5">
-          <Poster src={posterUrl(preview.posterPath, "w342")} name={preview.name} />
+          <Poster src={posterUrl(preview.posterPath, "w342")} name={preview.name} tmdbId={tmdbId} />
           <div className="min-w-0">
             <h1 className="text-2xl font-bold leading-tight">
               {preview.name}
@@ -165,7 +170,7 @@ export default async function ShowDetailPage({
       </Link>
 
       <div className="mt-4 flex gap-5">
-        <Poster src={poster} name={show.name} />
+        <Poster src={poster} name={show.name} tmdbId={tmdbId} />
         <div className="min-w-0">
           <h1 className="text-2xl font-bold leading-tight">{show.name}</h1>
           <p className="mt-2 text-sm text-muted">

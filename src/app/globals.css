@@ -39,6 +39,66 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Screen change: gentle fade + rise. */
+.page-enter {
+  animation: page-in 220ms ease-out both;
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Cards in a grid pop in one after another (first 12 only). */
+.page-enter .grid > * {
+  animation: page-in 260ms ease-out both;
+}
+.page-enter .grid > :nth-child(2) { animation-delay: 25ms; }
+.page-enter .grid > :nth-child(3) { animation-delay: 50ms; }
+.page-enter .grid > :nth-child(4) { animation-delay: 75ms; }
+.page-enter .grid > :nth-child(5) { animation-delay: 100ms; }
+.page-enter .grid > :nth-child(6) { animation-delay: 125ms; }
+.page-enter .grid > :nth-child(7) { animation-delay: 150ms; }
+.page-enter .grid > :nth-child(8) { animation-delay: 175ms; }
+.page-enter .grid > :nth-child(9) { animation-delay: 200ms; }
+.page-enter .grid > :nth-child(10) { animation-delay: 225ms; }
+.page-enter .grid > :nth-child(11) { animation-delay: 250ms; }
+.page-enter .grid > :nth-child(12) { animation-delay: 275ms; }
+
+/* Poster flying from the grid to the show page. */
+::view-transition-group(.poster-morph) {
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Instant press feedback on anything tappable. */
+a,
+button {
+  touch-action: manipulation;
+}
+button:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter,
+  .page-enter .grid > * {
+    animation: none;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
 }
 
 body {
